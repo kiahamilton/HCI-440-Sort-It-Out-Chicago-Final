@@ -268,6 +268,20 @@
 /* Camera disclosure: maintain readable contrast on the light notice background. */
 .inline-camera .help{color:#29233A !important;background:#FFF6E9 !important;}
 .inline-camera .help *{color:#29233A !important;}
+
+/* No exact match with suggestions: one continuous card as approved. */
+#suggestions:has(.typeahead-no-match){background:#fff8ed;border:2px solid #88749e;border-radius:18px;box-shadow:0 4px 0 rgba(57,35,93,.15);overflow:hidden}
+#suggestions .typeahead-no-match{padding:20px 22px 22px}
+#suggestions .typeahead-no-match-title{align-items:center;gap:15px;font-size:clamp(15px,1.5vw,19px);line-height:1.35;color:#39226b}
+#suggestions .typeahead-question{width:30px;height:30px;font-size:20px}
+#suggestions .typeahead-recovery-heading{border:0!important;margin:5px 0 12px 45px!important;padding:0!important;font-size:16px;font-weight:400;color:#676074}
+#suggestions .typeahead-recovery-items{display:grid;gap:8px;margin:0 0 17px}
+#suggestions button.typeahead-recovery-item{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;background:#fff;border:0;border-radius:0;padding:13px 15px;text-align:left;color:#171521;cursor:pointer;min-height:64px}
+#suggestions .typeahead-recovery-name{display:flex;align-items:center;gap:12px;min-width:0;font-weight:500}
+#suggestions .typeahead-recovery-name svg{flex-shrink:0}
+#suggestions button.typeahead-recovery-item:hover,#suggestions button.typeahead-recovery-item:focus-visible{background:#f5f7ff;outline:2px solid #39226b;outline-offset:-2px}
+#suggestions .typeahead-all-options{margin:0!important;padding:5px 9px!important;font-size:16px!important}
+@media(max-width:600px){#suggestions .typeahead-no-match{padding:15px 13px 17px}#suggestions .typeahead-recovery-heading{margin-left:39px!important;font-size:14px}#suggestions button.typeahead-recovery-item{padding:10px 9px;gap:6px;min-height:56px}#suggestions .typeahead-recovery-name{gap:7px;font-size:14px}#suggestions .typeahead-all-options{font-size:14px!important}}
 </style><style>
 /* Campaign placed after Beyond the Blue Cart, with one realistic station mockup */
 .campaign-bridge{margin-top:24px;background:#fbf8f1;border:1px solid #e8e2d8}
@@ -1039,8 +1053,9 @@ function renderSuggestions(){
  const close=recoveryMatches();
  el.innerHTML=`<div class="typeahead-no-match" role="status">
    <div class="typeahead-no-match-title"><span class="typeahead-question" aria-hidden="true">?</span><strong>${tr('No exact match for','No hay coincidencia exacta para')} “${safe(q)}”</strong></div>
+   ${close.length?`<div class="typeahead-recovery-heading">${tr('Did you mean:','¿Quisiste decir:')}</div><div class="typeahead-recovery-items">${close.map(x=>`<button type="button" class="typeahead-recovery-item" data-item="${x.id}"><span class="typeahead-recovery-name">${editorialIcon(x)} <span>${safe(name(x))}</span></span>${statusBadge(x)}</button>`).join('')}</div>`:''}
    <button type="button" class="typeahead-all-options" data-action="uncertain">${tr('See all options','Ver todas las opciones')} →</button>
- </div>`+(close.length?`<div class="typeahead-recovery-heading"><strong>${tr('Did you mean one of these?','¿Quisiste decir alguno de estos?')}</strong></div>`+close.map(x=>`<button data-item="${x.id}"><span>${editorialIcon(x)} ${safe(name(x))}</span>${statusBadge(x)}</button>`).join(''):'');
+ </div>`;
 }
 function pick(id){const x=items.find(z=>z.id===id);if(!x)return;active=id;condition='';recent=[id,...recent.filter(z=>z!==id)].slice(0,6);save();showAnswer()}
 // General material-reuse facts, not Chicago-specific recovery statistics.
